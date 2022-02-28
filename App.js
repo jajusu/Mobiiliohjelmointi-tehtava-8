@@ -5,33 +5,27 @@ import MapView, { Marker } from 'react-native-maps';
 export default function App() {
   // Location example
   const [hakuSana, setHakuSana] = useState('Kamppi, helsinki');
-  const [haku, setHaku]  =  useState([]);
   const [koordinaatit, setKoordinaatit] = useState({
     latitude: 60.168535,
     longitude: 24.930494,
-    latitudeDelta: 0.0322,
-    longitudeDelta: 0.0221
+    latitudeDelta: 0.006,
+    longitudeDelta: 0.004
   });
 
   const haeOsoite = () => {
-    fetch(`http://www.mapquestapi.com/geocoding/v1/address?key=2msKtjqAZ1D4pFv2irBeSRD605ROwdHA&location=${hakuSana}`)
+    fetch(`http://www.mapquestapi.com/geocoding/v1/address?key=KEY&location=${hakuSana}`) //api-key removed
     .then(response => response.json())
-    .then(responseJson  =>  setHaku(responseJson.results[0].locations[0].latLng))
+    .then(responseJson  =>  setKoordinaatit({
+      latitude: responseJson.results[0].locations[0].latLng.lat,
+      longitude: responseJson.results[0].locations[0].latLng.lng,
+      latitudeDelta: 0.006,
+      longitudeDelta: 0.004
+    }))
     .catch(error => { 
         Alert.alert('Error', error.message); 
     });
-    paivitaKoordinaatit();
-    console.log("haku: ",haku)
+    console.log("koordinaatit: ", koordinaatit);
   }  
-
-  const paivitaKoordinaatit = () =>{
-    setKoordinaatit({
-      latitude: haku.lat,
-      longitude: haku.lng,
-      latitudeDelta: 0.0322,
-      longitudeDelta: 0.0221
-    })
-  }
 
   return (
     <View style={styles.container}>
